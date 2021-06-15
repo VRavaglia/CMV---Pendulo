@@ -7,6 +7,7 @@ from scipy.integrate import solve_ivp
 import control
 import code
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class MyLinearizedSystem:
@@ -94,15 +95,17 @@ if __name__ == "__main__":
     # Eigen Values set by LQR
     parameters = []
     Q = np.diag([1, 1, 1, 1.])
-    R1 = np.diag([1.])
+    R1 = 1*np.diag([1.])
     R = R1
 
     
     K, S, E = control.lqr(ss.A, ss.B, Q, R)
     ss.compute_K(desired_eigs=E)  # Arbitarily set desired eigen values
     #ss.K = np.matrix('-10.0000  -34.3268  553.5394  379.0879')
+
+    tm = 1
         
-    sol = solve_ivp(y_dot, [0, 20], [-1, 0, -0.4, 0], t_eval=np.linspace(0, 20, 200))
+    sol = solve_ivp(y_dot, [0, tm*20], [-1, 0, -0.4, 0], t_eval=np.linspace(0, tm*20, tm*200))
     syst = InvertedPendulum()
 
     recalculated_u = [];
@@ -118,6 +121,8 @@ if __name__ == "__main__":
         if cv2.waitKey(30) == ord('q'):
             break
 
+    plt.plot(recalculated_u)
+    plt.show()
 
 
 
